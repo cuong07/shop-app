@@ -14,6 +14,7 @@ import com.project.shopapp.responses.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -30,6 +31,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
         Category existingCategory = categoryRepository.findById(productDTO.getCategoryId())
                 .orElseThrow(() ->
@@ -46,19 +48,26 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional
     public Product getProductById(Long id) throws Exception {
-        return productRepository.findById(id)
-                .orElseThrow(() ->
-                        new DataNotFoundException("Cannot find product with id: " + id));
+        Optional<Product> optionalProduct = productRepository.getDetailProduct(id);
+        if(optionalProduct.isPresent()) {
+            return optionalProduct.get();
+        }
+        throw new DataNotFoundException("Cannot find product with id =" + id);
     }
 
+
     @Override
-    public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
+    public Page<ProductResponse> getAllProducts(PageRequest pageRequest, String keyword, Long categoryId) {
         // limit : page
-        return productRepository.findAll(pageRequest).map(ProductResponse::fromProduct);
+        Page<Product> productsPage;
+        productsPage = productRepository.searchProducts(categoryId, keyword, pageRequest);
+        return productsPage.map(ProductResponse::fromProduct);
     }
 
     @Override
+    @Transactional
     public Product updateProduct(Long id, ProductDTO productDTO) throws Exception {
         Product existingProduct = getProductById(id);
         Category existingCategory = categoryRepository.findById(productDTO.getCategoryId())
@@ -77,6 +86,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         optionalProduct.ifPresent(productRepository::delete);
@@ -88,6 +98,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional
     public ProductImage createProductImage(
             Long id,
             ProductImageDTO productImageDTO

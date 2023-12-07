@@ -10,6 +10,7 @@ import com.project.shopapp.responses.ProductListResponse;
 import com.project.shopapp.responses.ProductResponse;
 import com.project.shopapp.services.IProductService;
 import jakarta.validation.Valid;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,12 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("${api.prefix}/products")
@@ -43,14 +42,17 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ProductListResponse> getProducts(
-            @RequestParam("size") int limit,
-            @RequestParam("page") int page
+            @RequestParam(name = "limit", defaultValue = "0") int limit,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "0", name = "category_id") Long categoryId
     ) {
         PageRequest pageRequest = PageRequest.of(
                 page,
                 limit,
-                Sort.by("createdAt").descending());
-        Page<ProductResponse> productPage = productService.getAllProducts(pageRequest);
+                Sort.by("id").ascending());
+        //      Sort.by("createdAt").ascending());
+        Page<ProductResponse> productPage = productService.getAllProducts(pageRequest, keyword, categoryId);
         int totalPages = productPage.getTotalPages();
         List<ProductResponse> products = productPage.getContent();
         return ResponseEntity.ok(ProductListResponse
@@ -76,7 +78,6 @@ public class ProductController {
     public ResponseEntity<?> createProduct(
             @Valid @RequestBody ProductDTO productDTO,
             BindingResult result
-
     ) {
         try {
             if (result.hasErrors()) {
@@ -93,7 +94,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping(value = "/uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadImages(
             @Valid @PathVariable("id") Long id,
             @ModelAttribute("files") List<MultipartFile> files
@@ -144,7 +145,7 @@ public class ProductController {
         try {
             Product updatedProduct = productService.updateProduct(id, productDTO);
             return ResponseEntity.ok(ProductResponse.fromProduct(updatedProduct));
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -182,6 +183,24 @@ public class ProductController {
             }
         }
         return ResponseEntity.ok("Create product fake successfully");
+    }
+
+
+    @GetMapping("/images/{imageName}")
+    public ResponseEntity<?> viewImage(@PathVariable String imageName) {
+        try {
+            Path imagePath = Paths.get("uploads/" + imageName);
+            UrlResource resource = new UrlResource(imagePath.toUri());
+            if (resource.exists()) {
+                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
+            } else {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(new UrlResource(Paths.get("uploads/notfound.jpg").toUri()));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     private String storeFile(MultipartFile file) throws IOException {

@@ -2,10 +2,14 @@ package com.project.shopapp.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.shopapp.models.Product;
+import com.project.shopapp.models.ProductImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,6 +29,9 @@ public class ProductResponse extends BaseResponse {
     @JsonProperty("category_id")
     private Long categoryId;
 
+    @JsonProperty("product_images")
+    private List<ProductImage> productImages = new ArrayList<>();
+
     public static ProductResponse fromProduct(Product product) {
         ProductResponse productResponse = ProductResponse.builder()
                 .name(product.getName())
@@ -33,9 +40,11 @@ public class ProductResponse extends BaseResponse {
                 .description(product.getDescription())
                 .thumbnail(product.getThumbnail())
                 .categoryId(product.getCategory().getId())
+                .productImages(product.getProductImages())
                 .build();
         productResponse.setCreatedAt(product.getCreatedAt());
         productResponse.setUpdatedAt(product.getUpdatedAt());
         return productResponse;
     }
+
 }

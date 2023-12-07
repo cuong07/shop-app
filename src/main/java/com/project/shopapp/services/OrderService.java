@@ -9,6 +9,7 @@ import com.project.shopapp.repositories.OrderRepository;
 import com.project.shopapp.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Transactional
     public Order createOrder(OrderDTO orderDTO) throws Exception {
         Order order = new Order();
         User user = userRepository.findById(orderDTO.getUserId())
@@ -57,6 +59,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Transactional
     public Order updateOrder(Long id, OrderDTO orderDTO) throws Exception {
         Order existingOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find order with id = " + id));
@@ -74,6 +77,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Transactional
     public void deleteOrder(Long id) throws Exception {
         Order existingOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find order with id = " + id));

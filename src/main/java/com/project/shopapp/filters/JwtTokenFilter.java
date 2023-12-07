@@ -26,7 +26,7 @@ import java.util.List;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Value("${api.prefix}")
-    private String aptPrefix;
+    private String apiPrefix;
 
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtils jwtTokenUtil;
@@ -55,6 +55,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 if (jwtTokenUtil.validateToken(token, userDetail)) {
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             userDetail,
+                            null,
                             userDetail.getAuthorities()
                     );
                     // set auth token
@@ -72,16 +73,31 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     // enable bypass
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
-                Pair.of(String.format("%s/products", aptPrefix), "GET"),
-                Pair.of(String.format("%s/categories", aptPrefix), "GET"),
-                Pair.of(String.format("%s/users/register", aptPrefix), "POST"),
-                Pair.of(String.format("%s/users/login", aptPrefix), "POST"),
-                Pair.of(String.format("%s/roles", aptPrefix), "GET")
+                Pair.of(String.format("%s/products", apiPrefix), "GET"),
+                Pair.of(String.format("%s/categories", apiPrefix), "GET"),
+                Pair.of(String.format("%s/users/register", apiPrefix), "POST"),
+                Pair.of(String.format("%s/users/login", apiPrefix), "POST"),
+                Pair.of(String.format("%s/roles", apiPrefix), "GET")
         );
         for (Pair<String, String> bypassToken : bypassTokens) {
             if (request.getServletPath().contains(bypassToken.getLeft()) &&
                     request.getMethod().equals(bypassToken.getRight())
             ) {
+                return true;
+            }
+        }
+        String requestPath = request.getServletPath();
+        String requestMethod = request.getMethod();
+
+        if (requestPath.equals(String.format("%s/orders", apiPrefix))
+                && requestMethod.equals("GET")) {
+            // Allow access to %s/orders
+            return true;
+        }
+
+        for (Pair<String, String> bypassToken : bypassTokens) {
+            if (requestPath.contains(bypassToken.getLeft())
+                    && requestMethod.equals(bypassToken.getRight())) {
                 return true;
             }
         }
