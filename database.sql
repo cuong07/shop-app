@@ -132,3 +132,22 @@ CREATE TABLE product_images(
 --UPDATE roles SET name = "USER" WHERE id = 2;
 
 ALTER TABLE product_images ADD COLUMN image_url LONGTEXT;
+
+-- ADD CART 19 - 12
+
+CREATE TABLE carts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE cart_items (
+     id INT PRIMARY KEY AUTO_INCREMENT,
+     cart_id INT,
+     product_id INT,
+     quantity INT CHECK(quantity > 0),
+     price DECIMAL(10, 2) CHECk(price >= 0),
+     total_money DECIMAL(10, 2) CHECk(total_money >= 0),
+     CONSTRAINT fk_cart_items_cart_id FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
+     CONSTRAINT fk_cart_items_product_id FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
