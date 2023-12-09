@@ -4,21 +4,19 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "categories")
-@Data
+@Table(name = "carts")
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
-public class Category {
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
+    @Column(name = "user_id")
+    private Long userId;
 
 }

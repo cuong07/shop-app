@@ -133,11 +133,16 @@ CREATE TABLE product_images(
 
 ALTER TABLE product_images ADD COLUMN image_url LONGTEXT;
 
+-- UPDATE TABLE "order_details"
+
 -- ADD CART 19 - 12
 
 CREATE TABLE carts (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
+    note VARCHAR(300) DEFAULT '',
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
@@ -145,9 +150,12 @@ CREATE TABLE cart_items (
      id INT PRIMARY KEY AUTO_INCREMENT,
      cart_id INT,
      product_id INT,
-     quantity INT CHECK(quantity > 0),
+     number_of_products INT CHECK(number_of_products > 0),
      price DECIMAL(10, 2) CHECk(price >= 0),
      total_money DECIMAL(10, 2) CHECk(total_money >= 0),
+     color VARCHAR(50),
+     created_at TIMESTAMP,
+     updated_at TIMESTAMP,
      CONSTRAINT fk_cart_items_cart_id FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
      CONSTRAINT fk_cart_items_product_id FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
