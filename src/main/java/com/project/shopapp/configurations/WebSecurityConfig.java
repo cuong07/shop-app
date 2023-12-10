@@ -66,7 +66,6 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.GET,
                                     String.format("%s/products/**", apiPrefix)).permitAll()
 
-
                             .requestMatchers(HttpMethod.GET,
                                     String.format("%s/products/images/*", apiPrefix)).permitAll()
 
@@ -102,6 +101,21 @@ public class WebSecurityConfig {
 
                             .requestMatchers(HttpMethod.DELETE,
                                     String.format("%s/order_details/**", apiPrefix)).hasRole(Role.ADMIN)
+
+                            .requestMatchers(HttpMethod.GET,
+                                    String.format("%s/carts**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
+
+                            .requestMatchers(HttpMethod.GET,
+                                    String.format("%s/carts/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
+
+                            .requestMatchers(HttpMethod.PUT,
+                                    String.format("%s/carts/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
+
+                            .requestMatchers(HttpMethod.POST,
+                                    String.format("%s/carts**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
+
+                            .requestMatchers(HttpMethod.DELETE,
+                                    String.format("%s/carts/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
 
                             .anyRequest()
                             .authenticated();

@@ -146,7 +146,7 @@ CREATE TABLE carts (
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE cart_items (
+CREATE TABLE cart_details (
      id INT PRIMARY KEY AUTO_INCREMENT,
      cart_id INT,
      product_id INT,
