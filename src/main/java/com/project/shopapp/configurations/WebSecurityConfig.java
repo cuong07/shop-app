@@ -117,6 +117,18 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.DELETE,
                                     String.format("%s/carts/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
 
+                            .requestMatchers(HttpMethod.POST,
+                                    String.format("%s/cart_details**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
+
+                            .requestMatchers(HttpMethod.GET,
+                                    String.format("%s/cart_details/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
+
+                            .requestMatchers(HttpMethod.PUT,
+                                    String.format("%s/cart_details/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
+
+                            .requestMatchers(HttpMethod.DELETE,
+                                    String.format("%s/cart_details/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
+
                             .anyRequest()
                             .authenticated();
                 })

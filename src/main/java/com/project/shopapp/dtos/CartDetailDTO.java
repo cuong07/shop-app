@@ -13,7 +13,7 @@ import lombok.*;
 public class CartDetailDTO {
     @JsonProperty("cart_id")
     @Min(value = 1, message = "Order's ID must be > 0")
-    private  Long cartId;
+    private Long cartId;
 
     @JsonProperty("product_id")
     @Min(value = 1, message = "Product's ID must be > 0")

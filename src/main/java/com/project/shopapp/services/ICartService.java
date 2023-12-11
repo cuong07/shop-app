@@ -10,6 +10,6 @@ public interface ICartService {
     Cart createCart(CartDTO cartDTO) throws Exception;
     Cart getCart(Long id)throws Exception;
     Cart updateCart(Long id, CartDTO cartDTO) throws Exception;
-    void deleteCart(Long id) throws Exception;
+    void deleteCart(Long id);
     List<Cart> findByUserId(Long userId);
 }

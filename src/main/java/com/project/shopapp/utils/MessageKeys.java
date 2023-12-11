@@ -18,4 +18,19 @@ public class MessageKeys {
     public static final String CATEGORY_GET_FAILED = "category.get_category.get_failed";
     public static final String CATEGORY_DELETE_FAILED = "category.delete_category.delete_failed";
     public static final String CATEGORY_CREATE_FAILED = "category.create_category.create_failed";
+
+    // cart
+    public static final String CART_CREATE_SUCCESSFULLY = "cart.create_cart.create_successfully";
+    public static final String CART_UPDATE_SUCCESSFULLY = "cart.update_cart.update_successfully";
+    public static final String CART_CREATE_FAILED = "cart.create_cart.create_failed";
+    public static final String CART_UPDATE_FAILED = "cart.update_cart.update_failed";
+    public static final String CART_NOT_FOUND = "cart.not_found_cart.not_found";
+
+    // Products
+    public static final String PRODUCT_CREATE_SUCCESSFULLY = "product.create_product.create_successfully";
+    public static final String PRODUCT_UPDATE_SUCCESSFULLY = "product.update_product.update_successfully";
+    public static final String PRODUCT_CREATE_FAILED = "product.create_product.create_failed";
+    public static final String PRODUCT_UPDATE_FAILED = "product.update_product.update_failed";
+    public static final String PRODUCT_NOT_FOUND = "product.not_found_product.not_found";
+
 }
