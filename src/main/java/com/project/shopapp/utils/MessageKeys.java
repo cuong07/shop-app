@@ -26,6 +26,13 @@ public class MessageKeys {
     public static final String CART_UPDATE_FAILED = "cart.update_cart.update_failed";
     public static final String CART_NOT_FOUND = "cart.not_found_cart.not_found";
 
+    // Cart detail
+    public static final String CART_DETAIL_CREATE_SUCCESSFULLY = "cart_detail.create_cart_detail.create_successfully";
+    public static final String CART_DETAIL_UPDATE_SUCCESSFULLY = "cart_detail.update_cart_detail.update_successfully";
+    public static final String CART_DETAIL_CREATE_FAILED = "cart_detail.create_cart_detail.create_failed";
+    public static final String CART_DETAIL_UPDATE_FAILED = "cart_detail.update_cart_detail.update_failed";
+    public static final String CART_DETAIL_NOT_FOUND = "cart_detail.not_found_cart_detail.not_found";
+
     // Products
     public static final String PRODUCT_CREATE_SUCCESSFULLY = "product.create_product.create_successfully";
     public static final String PRODUCT_UPDATE_SUCCESSFULLY = "product.update_product.update_successfully";

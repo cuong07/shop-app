@@ -8,10 +8,13 @@ import com.project.shopapp.repositories.CartRepository;
 import com.project.shopapp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,8 +39,12 @@ public class CartService implements ICartService{
 
     @Override
     public Cart getCart(Long id) throws Exception {
-        return cartRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("Cannot find cart with id = " + id));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<Cart> optionalCart  = cartRepository.getDetailCart(id);
+        if(optionalCart.isPresent()) {
+            return optionalCart.get();
+        }
+        throw new DataNotFoundException("Cannot find cart with id =" + id);
     }
 
     @Override

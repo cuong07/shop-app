@@ -10,10 +10,10 @@ import com.project.shopapp.repositories.CartDetailRepository;
 import com.project.shopapp.repositories.CartRepository;
 import com.project.shopapp.repositories.ProductRepository;
 import com.project.shopapp.utils.MessageKeys;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
+import java.util.Optional;
 
 @Service
 public class CartDetailService implements ICartDetailService {
@@ -31,13 +31,17 @@ public class CartDetailService implements ICartDetailService {
 
     @Override
     public CartDetail createCartDetail(CartDetailDTO cartDetailDTO) throws Exception {
-
         Cart cart =  cartRepository.findById(cartDetailDTO.getCartId())
                 .orElseThrow(() ->
                         new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.CART_NOT_FOUND, cartDetailDTO.getCartId())));
         Product product = productRepository.findById(cartDetailDTO.getProductId())
                 .orElseThrow(() ->
                         new DateTimeException(localizationUtils.getLocalizedMessage(MessageKeys.PRODUCT_NOT_FOUND, cartDetailDTO.getProductId())));
+        Optional<CartDetail> existingCartDetail = cartDetailRepository.findByCartIdAndProductId(
+                cartDetailDTO.getCartId(), cartDetailDTO.getProductId());
+        if (existingCartDetail.isPresent()) {
+            return existingCartDetail.get();
+        }
         CartDetail cartDetail = CartDetail.builder()
                 .price(cartDetailDTO.getPrice())
                 .totalMoney(cartDetailDTO.getTotalMoney())
@@ -51,11 +55,34 @@ public class CartDetailService implements ICartDetailService {
 
     @Override
     public CartDetail updateCartDetail(Long id, CartDetailDTO cartDetailDTO) throws Exception {
-        return null;
+        CartDetail existingCartDetail =  cartDetailRepository.findById(id)
+                .orElseThrow(() ->
+                        new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.CART_DETAIL_NOT_FOUND, id)));
+
+        Cart cart =  cartRepository.findById(cartDetailDTO.getCartId())
+                .orElseThrow(() ->
+                        new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.CART_NOT_FOUND, cartDetailDTO.getCartId())));
+
+        Product product = productRepository.findById(cartDetailDTO.getProductId())
+                .orElseThrow(() ->
+                        new DateTimeException(localizationUtils.getLocalizedMessage(MessageKeys.PRODUCT_NOT_FOUND, cartDetailDTO.getProductId())));
+
+        existingCartDetail.setProductOfNumber(existingCartDetail.getProductOfNumber() + cartDetailDTO.getNumberOfProduct());
+        return cartDetailRepository.save(existingCartDetail);
+    }
+
+    @Override
+    public CartDetail updateCartDetailNumberOfProduct(Long id, int numberOfProduct) throws Exception {
+        CartDetail existingCartDetail =  cartDetailRepository.findById(id)
+                .orElseThrow(() ->
+                        new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.CART_DETAIL_NOT_FOUND, id)));
+        existingCartDetail.setProductOfNumber(existingCartDetail.getProductOfNumber() + numberOfProduct);
+        return cartDetailRepository.save(existingCartDetail);
     }
 
     @Override
     public void deleteCartDetail(Long id) {
-
+        cartDetailRepository.deleteById(id);
     }
 }
+45

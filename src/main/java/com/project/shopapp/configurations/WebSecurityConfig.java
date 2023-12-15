@@ -26,7 +26,7 @@ import java.util.List;
 @EnableWebMvc
 @RequiredArgsConstructor
 @EnableWebSecurity(debug = true)
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
     private final JwtTokenFilter jwtTokenFilter;
 

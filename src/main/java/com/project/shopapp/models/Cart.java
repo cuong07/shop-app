@@ -3,6 +3,8 @@ package com.project.shopapp.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "carts")
 @Getter
@@ -22,5 +24,8 @@ public class Cart extends BaseEntity {
 
     @Column(name = "note")
     private String note;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CartDetail> cartDetails;
 
 }
