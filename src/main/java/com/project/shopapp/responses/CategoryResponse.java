@@ -1,7 +1,7 @@
 package com.project.shopapp.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.project.shopapp.models.Category;
+import com.project.shopapp.models.category.Category;
 import lombok.*;
 
 import java.util.List;

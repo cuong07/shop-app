@@ -1,10 +1,7 @@
 package com.project.shopapp.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.project.shopapp.models.Order;
-import com.project.shopapp.models.OrderDetail;
-import com.project.shopapp.models.Product;
-import jakarta.persistence.*;
+import com.project.shopapp.models.order.OrderDetail;
 import lombok.*;
 
 @AllArgsConstructor

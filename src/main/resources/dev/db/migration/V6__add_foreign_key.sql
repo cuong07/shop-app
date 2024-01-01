@@ -1,0 +1,1 @@
+ALTER TABLE orders ADD FOREIGN KEY (address_id) REFERENCES user_address(id);

@@ -12,14 +12,14 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDTO {
-    @Min(value = 1, message = "User's ID must be > 0")
-    @JsonProperty("user_id")
-    private  Long userId;
+//    @Min(value = 1, message = "User's ID must be > 0")
+//    @JsonProperty("user_id")
+//    private  Long userId;
     @JsonProperty("fullname")
     private String fullName;
 
     private String email;
-    private String address;
+//    private String address;
     private String note;
 
     @NotBlank(message = "Phone number is required")
@@ -39,4 +39,8 @@ public class OrderDTO {
 
     @JsonProperty("payment_method")
     private String paymentMethod;
+
+    @JsonProperty("address_id")
+    private Long addressId;
+
 }

@@ -1,19 +1,19 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.CartDTO;
-import com.project.shopapp.models.Cart;
+import com.project.shopapp.models.cart.Cart;
 import com.project.shopapp.responses.CartResponse;
-import com.project.shopapp.services.CartService;
+import com.project.shopapp.services.cart.CartService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.prefix}/carts")
@@ -23,6 +23,7 @@ public class CartController {
     private final CartService cartService;
     private final ModelMapper modelMapper;
     @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     private ResponseEntity<?> createCart(@Valid @RequestBody CartDTO cartDTO, BindingResult result) {
         try {
             if (result.hasErrors()) {
@@ -63,7 +64,19 @@ public class CartController {
         }
     }
 
+    @GetMapping("")
+    private ResponseEntity<?> getCurrentCartByUser() {
+        try {
+            Cart cart = cartService.getCartCurrentByUser();
+            return ResponseEntity.ok(CartResponse.fromCart(cart));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     private ResponseEntity<?> updateCart(@PathVariable("id") Long id, @Valid @RequestBody CartDTO cartDTO, BindingResult result) {
         try {
             if (result.hasErrors()) {
@@ -81,6 +94,7 @@ public class CartController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     private ResponseEntity<?> deleteCart(@PathVariable("id") Long id){
         try {
             cartService.deleteCart(id);

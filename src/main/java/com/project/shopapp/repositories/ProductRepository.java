@@ -1,6 +1,6 @@
 package com.project.shopapp.repositories;
 
-import com.project.shopapp.models.Product;
+import com.project.shopapp.models.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,3 +28,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.productImages WHERE p.id = :id")
     Optional<Product> getDetailProduct(@Param("id") Long id);
 }
+//@Query("SELECT p FROM Product p WHERE " +
+//        "(:categoryId IS NULL OR :categoryId = 0 OR p.category.id = :categoryId) " +
+//        "AND (:keyword IS NULL OR :keyword = '' OR p.name LIKE %:keyword% OR p.description LIKE %:keyword%) " +
+//        "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
+//        "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
+//        "AND (:availability IS NULL OR p.isAvailable = :availability) " +
+//        "AND (:brandId IS NULL OR :brandId = 0 OR p.brand.id = :brandId)")
+//List<Product> searchProducts(
+//        @Param("categoryId") Long categoryId,
+//        @Param("keyword") String keyword,
+//        @Param("minPrice") BigDecimal minPrice,
+//        @Param("maxPrice") BigDecimal maxPrice,
+//        @Param("availability") Boolean availability,
+//        @Param("brandId") Long brandId);oooooi

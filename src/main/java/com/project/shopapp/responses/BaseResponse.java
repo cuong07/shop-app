@@ -16,4 +16,10 @@ public class BaseResponse {
 
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
+
+    @JsonProperty("message")
+    private String message;
+
+    @JsonProperty("status")
+    private String status;
 }
