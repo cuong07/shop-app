@@ -13,18 +13,18 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class UserAddressResponse {
-    @JsonProperty("id")
+//    @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("address_one")
+//    @JsonProperty("address_one")
     private String addressOne;
-    @JsonProperty("address_second")
+//    @JsonProperty("address_second")
     private String addressSecond;
-    @JsonProperty("city")
+//    @JsonProperty("city")
     private String city;
-    @JsonProperty("province")
+//    @JsonProperty("province")
     private String province;
-    @JsonProperty("country")
+//    @JsonProperty("country")
     private String country;
 
     public static UserAddressResponse fromUserAddress(UserAddress userAddress){

@@ -2,7 +2,10 @@ package com.project.shopapp.services.category;
 
 import com.project.shopapp.dtos.CategoryDTO;
 import com.project.shopapp.models.category.Category;
+import com.project.shopapp.models.product.Product;
 import com.project.shopapp.repositories.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +34,14 @@ public class CategoryService implements ICategoryService{
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    @Transactional(readOnly = true)
+    public Page<Category> getAllCategories(PageRequest pageRequest) {
+        try {
+            return categoryRepository.findAll(pageRequest);
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            throw new RuntimeException("Error retrieving categories with the provided PageRequest.", e);
+        }
     }
 
     @Override

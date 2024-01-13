@@ -13,7 +13,6 @@ import java.util.List;
 public class ProductListResponse {
     private List<ProductResponse> products;
 
-    @JsonProperty("total_pages")
     private int totalPages;
 }
 

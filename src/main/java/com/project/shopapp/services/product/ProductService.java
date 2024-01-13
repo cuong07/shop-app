@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -56,13 +57,19 @@ public class ProductService implements IProductService {
         }
         throw new DataNotFoundException("Cannot find product with id =" + id);
     }
-
-
+//    BigDecimal minPrice,
+//    BigDecimal maxPrice
     @Override
-    public Page<ProductResponse> getAllProducts(PageRequest pageRequest, String keyword, Long categoryId) {
+    public Page<ProductResponse> getAllProducts(PageRequest pageRequest,
+                                                String keyword,
+                                                Long categoryId,
+                                                BigDecimal minPrice,
+                                                BigDecimal maxPrice
+                                                ) {
         // limit : page
         Page<Product> productsPage;
-        productsPage = productRepository.searchProducts(categoryId, keyword, pageRequest);
+        productsPage = productRepository.searchProducts(categoryId, keyword, minPrice, maxPrice, pageRequest);
+//        productsPage = productRepository.searchProducts(categoryId, keyword, pageRequest);
         return productsPage.map(ProductResponse::fromProduct);
     }
 

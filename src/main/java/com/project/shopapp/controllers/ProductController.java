@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,8 +49,10 @@ public class ProductController {
     public ResponseEntity<ProductListResponse> getProducts(
             @RequestParam(name = "limit", defaultValue = "0") int limit,
             @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(defaultValue = "0", name = "category_id") Long categoryId
+            @RequestParam(name = "min_price", defaultValue = "0") BigDecimal minPrice,
+            @RequestParam(name = "max_price", defaultValue = "999999999") BigDecimal maxPrice,
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "category_id", defaultValue = "0") Long categoryId
     ) {
         LOGGER.info(String.format("keyword: %s, category_id: %d", keyword, categoryId));
         PageRequest pageRequest = PageRequest.of(
@@ -57,7 +60,7 @@ public class ProductController {
                 limit,
                 Sort.by("id").ascending());
         //      Sort.by("createdAt").ascending());
-        Page<ProductResponse> productPage = productService.getAllProducts(pageRequest, keyword, categoryId);
+        Page<ProductResponse> productPage = productService.getAllProducts(pageRequest, keyword, categoryId, minPrice, maxPrice);
         int totalPages = productPage.getTotalPages();
         List<ProductResponse> products = productPage.getContent();
         return ResponseEntity.ok(ProductListResponse

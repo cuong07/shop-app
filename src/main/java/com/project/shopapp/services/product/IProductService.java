@@ -9,13 +9,16 @@ import com.project.shopapp.responses.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.math.BigDecimal;
+
 public interface IProductService {
     Product createProduct(ProductDTO productDTO) throws DataNotFoundException;
 
     Product getProductById(Long id) throws  Exception;
 
-    Page<ProductResponse> getAllProducts(PageRequest pageRequest, String keyword, Long categoryId);
+    Page<ProductResponse> getAllProducts(PageRequest pageRequest, String keyword, Long categoryId, BigDecimal minPrice , BigDecimal maxPrice);
 
+//    Page<ProductResponse> getAllProducts(PageRequest pageRequest, String keyword, Long categoryId);
     Product updateProduct(Long id, ProductDTO productDTO) throws Exception;
 
     void deleteProduct(Long id);

@@ -8,22 +8,26 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    // existBy + field
     boolean existsByName(String name);
-
-    // limit : page
     Page<Product> findAll(Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE " +
             "(:categoryId IS NULL OR :categoryId = 0 OR p.category.id = :categoryId) " +
-            "AND (:keyword IS NULL OR :keyword = '' OR p.name LIKE %:keyword% OR p.description LIKE %:keyword%)")
-    Page<Product> searchProducts
-            (@Param("categoryId") Long categoryId,
-             @Param("keyword") String keyword, Pageable pageable);
+            "AND (:keyword IS NULL OR :keyword = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR p.price <= :maxPrice)")
+    Page<Product> searchProducts(
+            @Param("categoryId") Long categoryId,
+            @Param("keyword") String keyword,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            Pageable pageable);
+
 
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.productImages WHERE p.id = :id")
     Optional<Product> getDetailProduct(@Param("id") Long id);
@@ -41,4 +45,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 //        @Param("minPrice") BigDecimal minPrice,
 //        @Param("maxPrice") BigDecimal maxPrice,
 //        @Param("availability") Boolean availability,
-//        @Param("brandId") Long brandId);oooooi
+//        @Param("brandId") Long brandId);

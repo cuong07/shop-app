@@ -26,10 +26,10 @@ public class ProductResponse extends BaseResponse {
 
     private String description;
 
-    @JsonProperty("category_id")
+//    @JsonProperty("category_id")
     private Long categoryId;
 
-    @JsonProperty("product_images")
+//    @JsonProperty("product_images")
     private List<ProductImage> productImages = new ArrayList<>();
 
     public static ProductResponse fromProduct(Product product) {

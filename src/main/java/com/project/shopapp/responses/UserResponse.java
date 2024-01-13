@@ -16,21 +16,21 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UserResponse extends BaseResponse {
-    @JsonProperty("id")
+//    @JsonProperty("id")
     private Long id;
-    @JsonProperty("full_name")
+//    @JsonProperty("full_name")
     private String fullName;
-    @JsonProperty("phone_number")
+//    @JsonProperty("phone_number")
     private String phoneNumber;
-    @JsonProperty("date_of_birth")
+//    @JsonProperty("date_of_birth")
     private Date dateOfBirth;
-    @JsonProperty("facebook_account_id")
+//    @JsonProperty("facebook_account_id")
     private Long facebookAccountId;
-    @JsonProperty("google_account_id")
+//    @JsonProperty("google_account_id")
     private Long googleAccountId;
-    @JsonProperty("role")
+//    @JsonProperty("role")
     private Role role;
-    @JsonProperty("user_addresses")
+//    @JsonProperty("user_addresses")
     private List<UserAddressResponse> userAddresses;
     public static UserResponse fromUser(User user) {
          UserResponse userResponse =  UserResponse.builder()

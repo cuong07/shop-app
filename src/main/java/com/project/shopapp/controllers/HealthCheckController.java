@@ -20,7 +20,7 @@ public class HealthCheckController {
     public ResponseEntity<?> healthCheck() {
         // Perform additional health checks here
         try {
-            List<Category> categories = categoryService.getAllCategories();
+//            List<Category> categories = categoryService.getAllCategories();
             // Get the computer name
             String computerName = InetAddress.getLocalHost().getHostName();
             return ResponseEntity.ok("ok, Computer Name: " + computerName);

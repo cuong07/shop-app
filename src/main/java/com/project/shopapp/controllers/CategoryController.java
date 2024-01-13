@@ -8,6 +8,9 @@ import com.project.shopapp.responses.UpdateCategoryResponse;
 import com.project.shopapp.services.category.CategoryService;
 import com.project.shopapp.utils.MessageKeys;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -22,7 +25,6 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
     private final LocalizationUtils localizationUtils;
-    //dependency injection
 
     public CategoryController(CategoryService categoryService, LocalizationUtils localizationUtils) {
         this.categoryService = categoryService;
@@ -53,12 +55,21 @@ public class CategoryController {
 
 
     @GetMapping("")
-    public ResponseEntity<List<Category>> getAllCategories(
-            @RequestParam("page") int page,
-            @RequestParam("limit") int limit
+    public ResponseEntity<?> getAllCategories(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "limit", defaultValue = "0") int limit
     ) {
-        List<Category> categories = categoryService.getAllCategories();
-        return ResponseEntity.ok(categories);
+       try {
+           PageRequest pageRequest = PageRequest.of(
+                   page,
+                   limit,
+                   Sort.by("id").ascending());
+           Page<Category> categories = categoryService.getAllCategories(pageRequest);
+           return ResponseEntity.ok(categories);
+       }catch (Exception e) {
+           e.printStackTrace();
+           return ResponseEntity.ok(e);
+       }
     }
 
 

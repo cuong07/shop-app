@@ -12,22 +12,22 @@ import lombok.*;
 public class CartDetailResponse extends BaseResponse {
     private Long id;
 
-    @JsonProperty("cart_id")
+//    @JsonProperty("cart_id")
     private Long cartId;
 
-    @JsonProperty("product")
+//    @JsonProperty("product")
     private ProductResponse product;
 
-    @JsonProperty("number_of_product")
+//    @JsonProperty("number_of_product")
     private int numberOfProduct;
 
-    @JsonProperty("price")
+//    @JsonProperty("price")
     private Float price;
 
-    @JsonProperty("total_money")
+//    @JsonProperty("total_money")
     private Float totalMoney;
 
-    @JsonProperty("color")
+//    @JsonProperty("color")
     private String color;
 
     public static CartDetailResponse fromCartDetail(CartDetail cartDetail) {

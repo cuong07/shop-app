@@ -15,16 +15,16 @@ import java.util.List;
 public class CartResponse extends BaseResponse {
     private Long id;
 
-    @JsonProperty("user_id")
+//    @JsonProperty("user_id")
     private Long userId;
 
-    @JsonProperty("note")
+//    @JsonProperty("note")
     private String note;
 
-    @JsonProperty("is_active")
+//    @JsonProperty("is_active")
     private Boolean isActive;
 
-    @JsonProperty("cart_details")
+//    @JsonProperty("cart_details")
     private List<CartDetailResponse> cartDetails = new ArrayList<>();
     public static CartResponse fromCart(Cart cart) {
         CartResponse cartResponse = CartResponse.builder()
