@@ -67,7 +67,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-            response.getWriter().write(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -81,7 +81,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/products", apiPrefix), "GET"),
                 Pair.of(String.format("%s/users/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/users/login", apiPrefix), "POST"),
-                Pair.of(String.format("%s/payments/vnpay-payment", apiPrefix), "GET")
+                Pair.of(String.format("%s/payments/vnpay-payment", apiPrefix), "GET"),
+                Pair.of(String.format("%s/reviews/product/**", apiPrefix), "GET")
         );
         for (Pair<String, String> bypassToken : bypassTokens) {
             if ( request.getMethod().equals(bypassToken.getRight()) &&

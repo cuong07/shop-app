@@ -1,4 +1,4 @@
-CREATE TABLE order_payments (
+CREATE TABLE IF NOT EXISTS order_payments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     note VARCHAR(255) DEFAULT '',
     total DECIMAL(16, 2),

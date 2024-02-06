@@ -1,12 +1,14 @@
 package com.project.shopapp.models.order;
 
 import com.project.shopapp.models.payment.OrderPayment;
+import com.project.shopapp.models.product.ProductImage;
 import com.project.shopapp.models.user.User;
 import com.project.shopapp.models.user.UserAddress;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -69,6 +71,9 @@ public class Order{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payment_id", referencedColumnName = "id")
     private OrderPayment orderPayment;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderDetail> orderDetails;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")

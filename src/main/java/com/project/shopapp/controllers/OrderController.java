@@ -42,8 +42,18 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<?> getCurrentUserOrders() {
+        try {
+            List<Order> orders = orderService.findByCurrentUser();
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/user/{id}")
-    public ResponseEntity<?> getOrders(@Valid @PathVariable("id") long id) {
+    public ResponseEntity<?> getOrdersByUserId(@Valid @PathVariable(name = "id" ) long id) {
         try {
             List<Order> orders = orderService.findByUserId(id);
             return ResponseEntity.ok(orders);

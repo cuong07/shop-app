@@ -104,14 +104,23 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<Order> findByUserId(Long userId) {
-        return orderRepository.findByUserId(userId);
+    public List<Order> findByUserId(long id) {
+        return orderRepository.findByUserId(id);
     }
+
+    @Override
+    public List<Order> findByCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        return orderRepository.findByUserId(user.getId());
+    }
+
 
     @Override
     public Boolean getPaymentStatus() throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
+
         OrderPayment orderPayment = orderPaymentRepository.findFirstByUserIdAndStatusAndIsActiveOrderByCreatedAtDesc(user.getId(), true, true);
         return  orderPayment.getStatus();
     }

@@ -23,6 +23,8 @@ public class CategoryService implements ICategoryService{
     public Category createCategory(CategoryDTO categoryDTO) {
         Category newCategory = Category.builder()
                 .name(categoryDTO.getName())
+                .description(categoryDTO.getDescription())
+                .thumbnail(categoryDTO.getThumbnail())
                 .build();
         return categoryRepository.save(newCategory);
     }
@@ -49,6 +51,8 @@ public class CategoryService implements ICategoryService{
     public Category updateCategory(Long id, CategoryDTO categoryDTO) {
         Category existingCategory = getCategoryById(id);
         existingCategory.setName(categoryDTO.getName());
+        existingCategory.setDescription(categoryDTO.getDescription());
+        existingCategory.setThumbnail(categoryDTO.getThumbnail());
         categoryRepository.save(existingCategory);
         return existingCategory;
     }

@@ -1,2 +1,2 @@
-ALTER TABLE orders ADD COLUMN address_id INT;
+--ALTER TABLE orders ADD COLUMN address_id INT;
 
