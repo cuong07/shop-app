@@ -5,9 +5,11 @@ import com.project.shopapp.dtos.ProductImageDTO;
 import com.project.shopapp.exceptions.DataNotFoundException;
 import com.project.shopapp.exceptions.InvalidParamException;
 import com.project.shopapp.models.category.Category;
+import com.project.shopapp.models.order.OrderDetail;
 import com.project.shopapp.models.product.Product;
 import com.project.shopapp.models.product.ProductImage;
 import com.project.shopapp.repositories.CategoryRepository;
+import com.project.shopapp.repositories.OrderDetailRepository;
 import com.project.shopapp.repositories.ProductImageRepository;
 import com.project.shopapp.repositories.ProductRepository;
 import com.project.shopapp.responses.ProductResponse;
@@ -17,18 +19,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductImageRepository productImageRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ProductImageRepository productImageRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ProductImageRepository productImageRepository, OrderDetailRepository orderDetailRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.productImageRepository = productImageRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     @Override
@@ -121,6 +129,21 @@ public class ProductService implements IProductService {
 
         }
         return productImageRepository.save(newProductImage);
+    }
+
+    public List<OrderDetail> getTopSellingProducts() {
+        List<OrderDetail> allOrderDetails = orderDetailRepository.findAll();
+
+        Map<Long, Integer> productSalesMap = new HashMap<>();
+        for (OrderDetail allOrderDetail : allOrderDetails) {
+            productSalesMap.merge(allOrderDetail.getProduct().getId(), (int) allOrderDetail.getNumberOfProducts(), Integer::sum);
+        }
+
+        return productSalesMap.entrySet().stream()
+                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                .limit(12)
+                .map(entry -> orderDetailRepository.findById(entry.getKey()).orElse(null))
+                .collect(Collectors.toList());
     }
 
 }

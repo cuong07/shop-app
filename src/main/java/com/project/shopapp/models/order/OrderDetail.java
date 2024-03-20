@@ -1,5 +1,6 @@
 package com.project.shopapp.models.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.shopapp.models.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,6 +17,7 @@ public class OrderDetail  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;

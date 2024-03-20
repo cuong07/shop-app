@@ -10,7 +10,7 @@ public interface IOrderService {
     Order getOrder(Long id) throws Exception;
     Order updateOrder(Long id, OrderDTO orderDTO) throws Exception;
     void deleteOrder(Long id) throws Exception;
-    List<Order> findByUserId(long id);
+    List<Order> findByUserId();
     List<Order> findByCurrentUser();
     Boolean getPaymentStatus() throws Exception;
 }

@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import com.project.shopapp.dtos.ProductDTO;
 import com.project.shopapp.dtos.ProductImageDTO;
 import com.project.shopapp.exceptions.DataNotFoundException;
+import com.project.shopapp.models.order.OrderDetail;
 import com.project.shopapp.models.product.Product;
 import com.project.shopapp.models.product.ProductImage;
 import com.project.shopapp.responses.ProductListResponse;
@@ -236,6 +237,17 @@ public class ProductController {
     private boolean isImageFile(MultipartFile file) {
         String contentType = file.getContentType();
         return contentType != null && contentType.startsWith("image/");
+    }
+
+    @GetMapping("/top-products")
+    public ResponseEntity<?> getTopProduct() {
+        try {
+            List<OrderDetail> orderDetailList = productService.getTopSellingProducts();
+            return ResponseEntity.ok(orderDetailList);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

@@ -104,8 +104,10 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<Order> findByUserId(long id) {
-        return orderRepository.findByUserId(id);
+    public List<Order> findByUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        return orderRepository.findByUserId(user.getId());
     }
 
     @Override

@@ -52,10 +52,11 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<?> getOrdersByUserId(@Valid @PathVariable(name = "id" ) long id) {
+    @GetMapping("/user/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public ResponseEntity<?> getOrdersByUserId() {
         try {
-            List<Order> orders = orderService.findByUserId(id);
+            List<Order> orders = orderService.findByUserId();
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

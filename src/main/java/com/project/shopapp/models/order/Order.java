@@ -1,7 +1,7 @@
 package com.project.shopapp.models.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.shopapp.models.payment.OrderPayment;
-import com.project.shopapp.models.product.ProductImage;
 import com.project.shopapp.models.user.User;
 import com.project.shopapp.models.user.UserAddress;
 import jakarta.persistence.*;
@@ -17,11 +17,12 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order{
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -35,8 +36,6 @@ public class Order{
     @Column(name = "phone_number", nullable = false, length = 10)
     private String phoneNumber;
 
-//    @Column(name = "address", length = 100)
-//    private String address;
 
     @Column(name = "note", length = 300)
     private String note;
@@ -72,6 +71,7 @@ public class Order{
     @JoinColumn(name = "payment_id", referencedColumnName = "id")
     private OrderPayment orderPayment;
 
+    //    @JsonIgnore
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails;
 
