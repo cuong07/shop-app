@@ -41,11 +41,9 @@ public class OrderService implements IOrderService {
     @Override
     @Transactional
     public Order createOrder(OrderDTO orderDTO) throws Exception {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         UserAddress userAddress = userAddressService.getUserAddressById(orderDTO.getAddressId());
-
         OrderPayment orderPayment = orderPaymentRepository.findFirstByUserIdAndStatusAndIsActiveOrderByCreatedAtDesc(user.getId(), true,true);
         if(!orderPayment.getStatus()){
             throw new Exception("Payment is failed!");
@@ -68,6 +66,30 @@ public class OrderService implements IOrderService {
         orderRepository.save(order);
         return order;
     
+    }
+
+    @Override
+    public Order createOrderCOD(OrderDTO orderDTO) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        UserAddress userAddress = userAddressService.getUserAddressById(orderDTO.getAddressId());
+        Order order = new Order();
+        modelMapper.typeMap(OrderDTO.class, Order.class)
+                .addMappings(mapper -> mapper.skip(Order::setId));
+        modelMapper.map(orderDTO, order);
+        order.setUserAddress(userAddress);
+        order.setUser(user);
+        order.setOrderDate(LocalDate.now());
+        order.setStatus(OrderStatus.PENDING);
+        order.setOrderPayment(null);
+        LocalDate shippingDate = order.getShippingDate() == null ? LocalDate.now() : order.getShippingDate();
+        if (shippingDate.isBefore(LocalDate.now())) {
+            throw new DataNotFoundException("Date must be at last today!");
+        }
+        order.setShippingDate(shippingDate);
+        order.setActive(true);
+        orderRepository.save(order);
+        return order;
     }
 
     @Override

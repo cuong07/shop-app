@@ -1,7 +1,12 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.OrderDTO;
+import com.project.shopapp.dtos.OrderDetailDTO;
+import com.project.shopapp.models.cart.Cart;
+import com.project.shopapp.models.cart.CartDetail;
 import com.project.shopapp.models.order.Order;
+import com.project.shopapp.services.cart.CartService;
+import com.project.shopapp.services.order.OrderDetailService;
 import com.project.shopapp.services.order.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +21,13 @@ import java.util.List;
 @RequestMapping("${api.prefix}/orders")
 public class OrderController {
     private final OrderService orderService;
+    private final CartService cartService;
+    private final OrderDetailService orderDetailService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, CartService cartService, OrderDetailService orderDetailService) {
         this.orderService = orderService;
+        this.cartService = cartService;
+        this.orderDetailService = orderDetailService;
     }
 
     @PostMapping
@@ -36,6 +45,34 @@ public class OrderController {
                 return ResponseEntity.badRequest().body(errorMessages);
             }
             Order order = orderService.createOrder(orderDTO);
+            return ResponseEntity.ok(order);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/cod")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public ResponseEntity<?> createOrderCOD(
+            @Valid @RequestBody OrderDTO orderDTO,
+            BindingResult result
+    ) {
+        try {
+            if (result.hasErrors()) {
+                List<String> errorMessages = result.getFieldErrors()
+                        .stream()
+                        .map(FieldError::getDefaultMessage)
+                        .toList();
+                return ResponseEntity.badRequest().body(errorMessages);
+            }
+
+            Order order = orderService.createOrderCOD(orderDTO);
+            Cart cart = cartService.getCartCurrentByUser();
+            for (CartDetail cartDetail : cart.getCartDetails()) {
+                OrderDetailDTO orderDetailDTO = getOrderDetailDTO(cartDetail, order);
+                orderDetailService.createOrderDetail(orderDetailDTO);
+            }
+            cartService.deleteCart(cart.getId());
             return ResponseEntity.ok(order);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -100,5 +137,17 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+
+    private static OrderDetailDTO getOrderDetailDTO(CartDetail cartDetail, Order order) {
+        OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
+        orderDetailDTO.setOrderId(order.getId());
+        orderDetailDTO.setColor(cartDetail.getColor());
+        orderDetailDTO.setPrice(cartDetail.getPrice());
+        orderDetailDTO.setNumberOfProduct(cartDetail.getNumberOfProducts());
+        orderDetailDTO.setProductId(cartDetail.getProduct().getId());
+        orderDetailDTO.setTotalMoney(cartDetail.getPrice() * cartDetail.getNumberOfProducts());
+        return orderDetailDTO;
     }
 }

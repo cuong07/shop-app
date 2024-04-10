@@ -18,7 +18,6 @@ public class HealthCheckController {
     private final CategoryService categoryService;
     @GetMapping("/health")
     public ResponseEntity<?> healthCheck() {
-        // Perform additional health checks here
         try {
 //            List<Category> categories = categoryService.getAllCategories();
             // Get the computer name
