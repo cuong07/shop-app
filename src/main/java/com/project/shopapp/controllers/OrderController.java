@@ -23,7 +23,6 @@ public class OrderController {
     private final OrderService orderService;
     private final CartService cartService;
     private final OrderDetailService orderDetailService;
-
     public OrderController(OrderService orderService, CartService cartService, OrderDetailService orderDetailService) {
         this.orderService = orderService;
         this.cartService = cartService;
@@ -131,7 +130,7 @@ public class OrderController {
             @Valid @PathVariable long id
     ) {
         try {
-            //  Xoá mềm => cập nhật trường active = false
+            //  active = false
             orderService.deleteOrder(id);
             return ResponseEntity.ok("Delete order successfully!");
         } catch (Exception e) {

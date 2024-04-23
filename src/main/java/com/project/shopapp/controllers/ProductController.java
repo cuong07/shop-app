@@ -1,5 +1,6 @@
 package com.project.shopapp.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.javafaker.Faker;
 import com.project.shopapp.dtos.ProductDTO;
 import com.project.shopapp.dtos.ProductImageDTO;
@@ -9,6 +10,8 @@ import com.project.shopapp.models.product.Product;
 import com.project.shopapp.models.product.ProductImage;
 import com.project.shopapp.responses.ProductListResponse;
 import com.project.shopapp.responses.ProductResponse;
+import com.project.shopapp.responses.ResponseObject;
+import com.project.shopapp.services.product.IProductRedisService;
 import com.project.shopapp.services.product.IProductService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -41,33 +44,59 @@ public class ProductController {
 
     private final IProductService productService;
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
+    private final IProductRedisService productRedisService;
 
-    public ProductController(IProductService productService) {
+    public ProductController(IProductService productService, IProductRedisService getAllProducts) {
         this.productService = productService;
+        this.productRedisService = getAllProducts;
     }
 
     @GetMapping
-    public ResponseEntity<ProductListResponse> getProducts(
+    public ResponseEntity<ResponseObject> getProducts(
             @RequestParam(name = "limit", defaultValue = "0") int limit,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "min_price", defaultValue = "0") BigDecimal minPrice,
             @RequestParam(name = "max_price", defaultValue = "999999999") BigDecimal maxPrice,
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
             @RequestParam(name = "category_id", defaultValue = "0") Long categoryId
-    ) {
+    ) throws JsonProcessingException {
+        int totalPages = 0;
         LOGGER.info(String.format("keyword: %s, category_id: %d", keyword, categoryId));
         PageRequest pageRequest = PageRequest.of(
                 page,
                 limit,
                 Sort.by("id").ascending());
         //      Sort.by("createdAt").ascending());
-        Page<ProductResponse> productPage = productService.getAllProducts(pageRequest, keyword, categoryId, minPrice, maxPrice);
-        int totalPages = productPage.getTotalPages();
-        List<ProductResponse> products = productPage.getContent();
-        return ResponseEntity.ok(ProductListResponse
+
+        List<ProductResponse> productResponses = productRedisService.getAllProducts(keyword, categoryId, pageRequest, minPrice, maxPrice);
+        if (productResponses!=null && !productResponses.isEmpty()) {
+            totalPages = productResponses.get(0).getTotalPages();
+        }
+        if(productResponses == null) {
+            Page<ProductResponse> productPage = productService.getAllProducts(pageRequest, keyword, categoryId, minPrice, maxPrice);
+            totalPages = productPage.getTotalPages();
+            productResponses = productPage.getContent();
+            for (ProductResponse product : productResponses) {
+                product.setTotalPages(totalPages);
+            }
+            productRedisService.saveAllProducts(
+                    productResponses,
+                    keyword,
+                    categoryId,
+                    pageRequest,
+                    minPrice,
+                    maxPrice
+            );
+        }
+        ProductListResponse productListResponse = ProductListResponse
                 .builder()
-                .products(products)
+                .products(productResponses)
                 .totalPages(totalPages)
+                .build();
+        return ResponseEntity.ok().body(ResponseObject.builder()
+                .message("Get products successfully")
+                .status(HttpStatus.OK)
+                .data(productListResponse)
                 .build());
     }
 

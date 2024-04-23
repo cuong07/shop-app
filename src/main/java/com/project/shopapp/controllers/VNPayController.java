@@ -93,8 +93,8 @@ public class VNPayController {
                 model.addAttribute("payment_time", paymentTime);
                 model.addAttribute("transaction_id", transactionId);
                 model.addAttribute("message", "Successfully");
+                
                 paymentService.createOrderPayment(orderPaymentDTO);
-
                 return ResponseEntity.ok(model);
             } else {
                 orderPaymentDTO.setMessage("error");
