@@ -98,6 +98,8 @@ ALTER TABLE orders ADD COLUMN tracking_number VARCHAR(100);
 ALTER TABLE orders ADD COLUMN payment_method VARCHAR(100);
 
 ALTER TABLE orders ADD COLUMN active TINYINT(1);
+-- 27/12/23
+ALTER TABLE orders DROP COLUMN address;
 
 ALTER TABLE
     orders MODIFY COLUMN status ENUM(
@@ -159,3 +161,24 @@ CREATE TABLE cart_details (
      CONSTRAINT fk_cart_items_cart_id FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
      CONSTRAINT fk_cart_items_product_id FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
+ALTER TABLE carts ADD COLUMN  is_active TINYINT(1);
+
+
+-- ADDRESS  27/12/23
+CREATE TABLE user_address (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    address_one VARCHAR(255) NOT NULL,
+    address_second VARCHAR(255) DEFAULT '',
+    city VARCHAR(100) DEFAULT '',
+    province VARCHAR(100) DEFAULT '',
+    country VARCHAR(100) DEFAULT '',
+    user_id INT,
+    CONSTRAINT fk_address_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+--ALTER TABLE user_address ADD COLUMN user_id INT;
+--ALTER TABLE user_address ADD CONSTRAINT fk_users_address FOREIGN KEY (user_id) REFERENCES users(id);
+--ALTER TABLE user_address DROP FOREIGN KEY fk_address_user;
+--ALTER TABLE user_address DROP COLUMN user_id;
+--ALTER TABLE users ADD COLUMN address_id INT, ADD CONSTRAINT fk_users_address FOREIGN KEY (address_id) REFERENCES user_address(id);
+--ALTER TABLE users DROP FOREIGN KEY fk_users_address;
+--ALTER TABLE users DROP COLUMN address_id;

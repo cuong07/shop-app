@@ -1,7 +1,7 @@
 package com.project.shopapp.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.project.shopapp.models.Category;
+import com.project.shopapp.models.category.Category;
 import lombok.*;
 
 import java.util.List;
@@ -12,12 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class CategoryResponse {
-    @JsonProperty("message")
+//    @JsonProperty("message")
     private String message;
 
-    @JsonProperty("errors")
+//    @JsonProperty("errors")
     private List<String> errors;
 
-    @JsonProperty("category")
+//    @JsonProperty("category")
     private Category category;
 }

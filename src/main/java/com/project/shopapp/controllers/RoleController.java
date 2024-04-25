@@ -1,8 +1,7 @@
 package com.project.shopapp.controllers;
 
-import com.project.shopapp.models.Role;
-import com.project.shopapp.services.RoleService;
-import lombok.Getter;
+import com.project.shopapp.models.user.Role;
+import com.project.shopapp.services.role.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

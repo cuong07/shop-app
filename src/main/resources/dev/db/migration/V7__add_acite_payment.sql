@@ -1,0 +1,1 @@
+ALTER TABLE order_payments ADD COLUMN is_active TINYINT(1) NOT NULL;

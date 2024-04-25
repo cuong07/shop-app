@@ -1,7 +1,7 @@
 package com.project.shopapp.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.project.shopapp.models.CartDetail;
+import com.project.shopapp.models.cart.CartDetail;
 import lombok.*;
 
 @Getter
@@ -12,29 +12,29 @@ import lombok.*;
 public class CartDetailResponse extends BaseResponse {
     private Long id;
 
-    @JsonProperty("cart_id")
+//    @JsonProperty("cart_id")
     private Long cartId;
 
-    @JsonProperty("product")
+//    @JsonProperty("product")
     private ProductResponse product;
 
-    @JsonProperty("product_of_number")
-    private int productOfNumber;
+//    @JsonProperty("number_of_product")
+    private int numberOfProduct;
 
-    @JsonProperty("price")
+//    @JsonProperty("price")
     private Float price;
 
-    @JsonProperty("total_money")
+//    @JsonProperty("total_money")
     private Float totalMoney;
 
-    @JsonProperty("color")
+//    @JsonProperty("color")
     private String color;
 
     public static CartDetailResponse fromCartDetail(CartDetail cartDetail) {
         CartDetailResponse cartDetailResponse =  CartDetailResponse.builder()
                 .id(cartDetail.getId())
                 .price(cartDetail.getPrice())
-                .productOfNumber(cartDetail.getProductOfNumber())
+                .numberOfProduct(cartDetail.getNumberOfProducts())
                 .totalMoney(cartDetail.getTotalMoney())
                 .color(cartDetail.getColor())
                 .product(ProductResponse.fromProduct(cartDetail.getProduct()))

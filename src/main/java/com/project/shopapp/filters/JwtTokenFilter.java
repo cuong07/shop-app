@@ -1,7 +1,7 @@
 package com.project.shopapp.filters;
 
 import com.project.shopapp.components.JwtTokenUtils;
-import com.project.shopapp.models.User;
+import com.project.shopapp.models.user.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,25 +63,30 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
-
             filterChain.doFilter(request, response);
+            return;
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            e.printStackTrace();
         }
     }
 
     // enable bypass
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
-                Pair.of(String.format("%s/products", apiPrefix), "GET"),
                 Pair.of(String.format("%s/categories", apiPrefix), "GET"),
+                Pair.of(String.format("%s/healthcheck/health", apiPrefix), "GET"),
+                Pair.of(String.format("%s/actuator/**", apiPrefix), "GET"),
+                Pair.of(String.format("%s/roles**", apiPrefix), "GET"),
+                Pair.of(String.format("%s/products", apiPrefix), "GET"),
                 Pair.of(String.format("%s/users/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/users/login", apiPrefix), "POST"),
-                Pair.of(String.format("%s/roles", apiPrefix), "GET")
+                Pair.of(String.format("%s/payments/vnpay-payment", apiPrefix), "GET"),
+                Pair.of(String.format("%s/reviews/product/**", apiPrefix), "GET")
         );
         for (Pair<String, String> bypassToken : bypassTokens) {
-            if (request.getServletPath().contains(bypassToken.getLeft()) &&
-                    request.getMethod().equals(bypassToken.getRight())
+            if ( request.getMethod().equals(bypassToken.getRight()) &&
+                    request.getServletPath().contains(bypassToken.getLeft())
             ) {
                 return true;
             }
@@ -89,15 +94,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String requestPath = request.getServletPath();
         String requestMethod = request.getMethod();
 
-        if (requestPath.equals(String.format("%s/orders", apiPrefix))
-                && requestMethod.equals("GET")) {
-            // Allow access to %s/orders
-            return true;
-        }
-
-        for (Pair<String, String> bypassToken : bypassTokens) {
-            if (requestPath.contains(bypassToken.getLeft())
-                    && requestMethod.equals(bypassToken.getRight())) {
+        for (Pair<String, String> token : bypassTokens) {
+            String path = token.getLeft();
+            String method = token.getRight();
+            // Check if the request path and method match any pair in the bypassTokens list
+            if (requestPath.matches(path.replace("**", ".*"))
+                    && requestMethod.equalsIgnoreCase(method)) {
                 return true;
             }
         }

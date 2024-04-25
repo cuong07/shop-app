@@ -2,9 +2,9 @@ package com.project.shopapp.controllers;
 
 
 import com.project.shopapp.dtos.OrderDetailDTO;
-import com.project.shopapp.models.OrderDetail;
+import com.project.shopapp.models.order.OrderDetail;
 import com.project.shopapp.responses.OrderDetailResponse;
-import com.project.shopapp.services.OrderDetailService;
+import com.project.shopapp.services.order.OrderDetailService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

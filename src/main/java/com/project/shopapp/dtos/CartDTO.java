@@ -1,8 +1,6 @@
 package com.project.shopapp.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.project.shopapp.models.User;
-import jakarta.persistence.*;
 import lombok.*;
 
 @Data
@@ -17,4 +15,9 @@ public class CartDTO {
     private Long userId;
 
     private String note;
+
+    @JsonProperty("is_active")
+    private Boolean isActive;
+
+
 }

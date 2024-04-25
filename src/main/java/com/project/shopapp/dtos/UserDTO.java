@@ -26,6 +26,9 @@ public class UserDTO {
     @NotBlank(message = "Password is required")
     private String password;
 
+    @JsonProperty("email")
+    private String email;
+
     @NotBlank(message = "Password confirm is required")
     @JsonProperty("retype_password")
     private String retypePassword;
@@ -45,4 +48,8 @@ public class UserDTO {
     @NotNull(message = "Role id is required")
     @JsonProperty("role_id")
     private Long roleId;
+
+    @NotNull(message = "Role id is required")
+    @JsonProperty("address_id")
+    private Long addressId;
 }

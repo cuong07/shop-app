@@ -1,6 +1,6 @@
 package com.project.shopapp.repositories;
 
-import com.project.shopapp.models.ProductImage;
+import com.project.shopapp.models.product.ProductImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

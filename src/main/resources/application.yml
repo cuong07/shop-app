@@ -25,9 +25,47 @@ spring:
   devtools:
     restart:
       enabled: false
+  flyway:
+    locations: classpath:/db/migration,classpath:/dev/db/migration
+    baseline-on-migrate: true
+  data:
+    redis:
+      #spring.data.redis.use-redis-cache
+      use-redis-cache: true
+      host: ${REDIS_HOST:localhost} # Default to 'localhost' if not provided
+      #host: ${REDIS_HOST:ubuntu-server-01.local} # Default to 'localhost' if not provided
+      port: ${REDIS_PORT:6379}      # Default to 6379 if not provided
 api:
   prefix: api/v1
+client:
+  url: http://localhost:3000/carts/checkout/result
 jwt:
   expiration: 2592000 #30 days = 30 * 24 * 60 * 60
   secret-key: akGPZqJ1hoJ10ZiztY713eYxf9Ggv5kA/bJrBVbgU3Q=
+
+logging:
+  level:
+    org:
+      thymeleaf: DEBUG
+      springframework.security: DEBUG
+
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+
+#health check
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /api/v1/actuator
+      exposure:
+        #include: "health"
+        include: "health, info"
 
